@@ -112,54 +112,66 @@ ros2 launch nav2_map_server map_saver_cli.launch.py save_map:=true map:=<map_nam
 - Check that the map frame and odom frame are properly defined
 - Make sure your navigation parameters match your robot's physical capabilities
 
-# Robot Simulation Launch Files
+# Robot Navigation Stack
 
-This repository contains ROS 2 launch files and configuration for running robot simulation and navigation. It uses a URDF model exported from a SolidWorks assembly.
+This repository contains an optimized ROS 2 navigation package for robots with URDF models exported from SolidWorks. The code has been optimized to remove unnecessary components while maintaining full functionality.
+
+## Optimizations Made
+
+The codebase has been optimized in several ways:
+
+1. **Removed Unnecessary Launch Files**:
+
+   - Eliminated redundant simulation-specific launch files
+   - Removed unused SLAM configuration files
+   - Simplified launch structure to focus on essential components
+
+2. **Streamlined Nav2 Parameters**:
+
+   - Reduced parameters to only essential configurations
+   - Removed redundant node configurations (e.g., `*_rclcpp_node` entries)
+   - Optimized controller configurations for better performance
+   - Eliminated duplicate and unused parameter sections
+
+3. **Package Dependency Cleanup**:
+
+   - Removed unnecessary dependencies to make the package lighter
+   - Focused only on required navigation components
+
+4. **Launch File Optimization**:
+   - Removed unused imports in launch files
+   - Simplified parameter passing between launch files
+   - Improved readability and maintainability
 
 ## Package Structure
 
-- **launch/** - Contains launch files for running the robot simulation
+- **launch/** - Contains optimized launch files for running the robot navigation stack
 
   - **robot_state_publisher.launch.py** - Launches the robot state publisher with URDF model
   - **navigation.launch.py** - Launches the Navigation2 stack
   - **main.launch.py** - Main launch file that starts both robot state publisher and navigation
 
-- **params/** - Contains configuration parameters
+- **params/** - Contains optimized configuration parameters
 
-  - **nav2_params.yaml** - Navigation2 configuration parameters
+  - **nav2_params.yaml** - Streamlined Navigation2 configuration parameters
 
 - **urdf/** - Contains the robot URDF model
+
   - **robot.urdf** - Robot URDF model exported from SolidWorks
 
-## Running the Simulation
+- **maps/** - Contains navigation maps
+  - **map.yaml** - Map configuration
+  - **map.pgm** - Map image file
 
-### Prerequisites
+## Running the Navigation Stack
 
-- ROS 2 (tested with Humble/Foxy)
-- Navigation2 stack installed
-- URDF model of the robot (generated from SolidWorks)
-
-### Launch Commands
-
-To start the robot state publisher only:
-
-```bash
-ros2 launch urdf_export_assem_3_sldasm robot_state_publisher.launch.py
-```
-
-To start the navigation stack only:
-
-```bash
-ros2 launch urdf_export_assem_3_sldasm navigation.launch.py
-```
-
-To start both robot state publisher and navigation:
+To start the navigation stack:
 
 ```bash
 ros2 launch urdf_export_assem_3_sldasm main.launch.py
 ```
 
-### Launch Arguments
+## Launch Arguments
 
 The launch files accept several arguments:
 
@@ -180,7 +192,6 @@ To use your own URDF model:
 
 1. Replace the `robot.urdf` file in the `urdf` directory with your model
 2. Update the parameters in `nav2_params.yaml` to match your robot's configuration
-3. Modify the launch files if necessary to accommodate your robot's specific requirements
 
 ## License
 

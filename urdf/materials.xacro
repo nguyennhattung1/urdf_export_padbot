@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Define materials for visual appearance -->
+  <material name="base_material">
+    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+  </material>
+
+  <material name="wheel_material">
+    <color rgba="0.796078431372549 0.796078431372549 0.796078431372549 1" />
+  </material>
+
+  <material name="lidar_material">
+    <color rgba="0.082353 0.082353 0.082353 1" />
+  </material>
+
+  <material name="imu_material">
+    <color rgba="0.79216 0.81961 0.93333 1" />
+  </material>
+
+</robot> 

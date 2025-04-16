@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Math constants -->
+  <xacro:property name="pi" value="3.1415926535897931" />
+  
+  <!-- Base link properties -->
+  <xacro:property name="base_link_mass" value="13.3704893846402" />
+  <xacro:property name="base_link_com_x" value="0.00134691271357942" />
+  <xacro:property name="base_link_com_y" value="-2.52657545412177E-05" />
+  <xacro:property name="base_link_com_z" value="0.472082902102997" />
+  <xacro:property name="base_link_ixx" value="0.389862215162195" />
+  <xacro:property name="base_link_ixy" value="3.73442510141833E-05" />
+  <xacro:property name="base_link_ixz" value="0.00489552498258593" />
+  <xacro:property name="base_link_iyy" value="0.361904289007973" />
+  <xacro:property name="base_link_iyz" value="-0.000207680006355546" />
+  <xacro:property name="base_link_izz" value="0.413509038616086" />
+  
+  <!-- Main wheel properties -->
+  <xacro:property name="wheel_y_offset" value="0.212229686537745" />
+  <xacro:property name="wheel_z_offset" value="0.0183338534091537" />
+  <xacro:property name="wheel_radius" value="0.1" />
+  
+  <!-- Right wheel properties -->
+  <xacro:property name="right_wheel_mass" value="0.415938182180326" />
+  <xacro:property name="right_wheel_com_x" value="-8.93952047617032E-06" />
+  <xacro:property name="right_wheel_com_y" value="0.0150000793737486" />
+  <xacro:property name="right_wheel_com_z" value="-1.16037505515365E-05" />
+  <xacro:property name="right_wheel_ixx" value="0.000652914571865517" />
+  <xacro:property name="right_wheel_ixy" value="1.4107340831946E-10" />
+  <xacro:property name="right_wheel_ixz" value="2.68048423358216E-08" />
+  <xacro:property name="right_wheel_iyy" value="0.00125445432257594" />
+  <xacro:property name="right_wheel_iyz" value="-3.56322307486116E-12" />
+  <xacro:property name="right_wheel_izz" value="0.000652929076357562" />
+  
+  <!-- Left wheel properties -->
+  <xacro:property name="left_wheel_mass" value="0.415938181435814" />
+  <xacro:property name="left_wheel_com_x" value="-1.36983615786788E-05" />
+  <xacro:property name="left_wheel_com_y" value="-0.0149999206509359" />
+  <xacro:property name="left_wheel_com_z" value="-5.18816478300987E-06" />
+  <xacro:property name="left_wheel_ixx" value="0.000652942508895541" />
+  <xacro:property name="left_wheel_ixy" value="1.18132939340405E-10" />
+  <xacro:property name="left_wheel_ixz" value="1.85257141794357E-08" />
+  <xacro:property name="left_wheel_iyy" value="0.00125445432188265" />
+  <xacro:property name="left_wheel_iyz" value="-7.68116274070127E-11" />
+  <xacro:property name="left_wheel_izz" value="0.000652901138625573" />
+  
+  <!-- Mecanum drive wheel (MDW) common properties -->
+  <xacro:property name="mdw_x_offset" value="0.165" />
+  <xacro:property name="mdw_z_offset" value="0.0429999999999998" />
+  <xacro:property name="mdw_yaw" value="-0.0478770767270203" />
+  
+  <!-- Back MDW frame properties -->
+  <xacro:property name="back_mdw_frame_mass" value="0.0181670542093644" />
+  <xacro:property name="back_mdw_frame_com_x" value="-0.00475029171679112" />
+  <xacro:property name="back_mdw_frame_com_y" value="-0.0159989183073881" />
+  <xacro:property name="back_mdw_frame_com_z" value="0.0002537425043838" />
+  <xacro:property name="back_mdw_frame_ixx" value="5.72579167306931E-06" />
+  <xacro:property name="back_mdw_frame_ixy" value="-7.35212482813745E-07" />
+  <xacro:property name="back_mdw_frame_ixz" value="3.8141159495066E-08" />
+  <xacro:property name="back_mdw_frame_iyy" value="6.85382817075558E-06" />
+  <xacro:property name="back_mdw_frame_iyz" value="6.10228259069868E-08" />
+  <xacro:property name="back_mdw_frame_izz" value="6.26356011268607E-06" />
+  
+  <!-- Back MDW wheel properties -->
+  <xacro:property name="back_mdw_wheel_mass" value="0.0803777244026511" />
+  <xacro:property name="back_mdw_wheel_x" value="-0.0186165206066295" />
+  <xacro:property name="back_mdw_wheel_y" value="-0.0552708014281127" />
+  <xacro:property name="back_mdw_wheel_z" value="0.0019464470498146" />
+  <xacro:property name="back_mdw_wheel_axis_x" value="-0.0827102895528008" />
+  <xacro:property name="back_mdw_wheel_axis_z" value="-0.996573634009094" />
+  <xacro:property name="back_mdw_wheel_ixx" value="2.90627993874311E-05" />
+  <xacro:property name="back_mdw_wheel_ixy" value="9.93120762310388E-22" />
+  <xacro:property name="back_mdw_wheel_ixz" value="1.82015378594515E-06" />
+  <xacro:property name="back_mdw_wheel_iyy" value="2.89117363434887E-05" />
+  <xacro:property name="back_mdw_wheel_iyz" value="7.47994503296913E-22" />
+  <xacro:property name="back_mdw_wheel_izz" value="5.08427111075994E-05" />
+  
+  <!-- Front MDW frame properties -->
+  <xacro:property name="front_mdw_frame_mass" value="0.0181670542093644" />
+  <xacro:property name="front_mdw_frame_com_x" value="0.00248501109838795" />
+  <xacro:property name="front_mdw_frame_com_y" value="-0.0159989183073879" />
+  <xacro:property name="front_mdw_frame_com_z" value="0.00405639944951833" />
+  <xacro:property name="front_mdw_frame_ixx" value="6.10969442173415E-06" />
+  <xacro:property name="front_mdw_frame_ixy" value="4.0373691414436E-07" />
+  <xacro:property name="front_mdw_frame_ixz" value="-2.46016685875738E-07" />
+  <xacro:property name="front_mdw_frame_iyy" value="6.85382817075558E-06" />
+  <xacro:property name="front_mdw_frame_iyz" value="6.1746067431377E-07" />
+  <xacro:property name="front_mdw_frame_izz" value="5.87965736402121E-06" />
+  
+  <!-- Front MDW wheel properties -->
+  <xacro:property name="front_mdw_wheel_mass" value="0.0803777244026511" />
+  <xacro:property name="front_mdw_wheel_x" value="0.0105759971863268" />
+  <xacro:property name="front_mdw_wheel_y" value="-0.0552708014281127" />
+  <xacro:property name="front_mdw_wheel_z" value="0.0154438265701736" />
+  <xacro:property name="front_mdw_wheel_axis_x" value="-0.83696481718083" />
+  <xacro:property name="front_mdw_wheel_axis_z" value="0.547256699183719" />
+  <xacro:property name="front_mdw_wheel_ixx" value="4.43804269714061E-05" />
+  <xacro:property name="front_mdw_wheel_ixy" value="-1.791097142141E-21" />
+  <xacro:property name="front_mdw_wheel_ixz" value="-1.01143374248899E-05" />
+  <xacro:property name="front_mdw_wheel_iyy" value="2.89117363434887E-05" />
+  <xacro:property name="front_mdw_wheel_iyz" value="1.67995338632247E-21" />
+  <xacro:property name="front_mdw_wheel_izz" value="3.55250835236243E-05" />
+  
+  <!-- IMU properties -->
+  <xacro:property name="imu_mass" value="0.00064128" />
+  <xacro:property name="imu_x" value="-0.00486608888305493" />
+  <xacro:property name="imu_y" value="-0.0104697509145408" />
+  <xacro:property name="imu_z" value="0.129" />
+  <xacro:property name="imu_yaw" value="-0.0478770767270203" />
+  <xacro:property name="imu_com_x" value="9.133E-05" />
+  <xacro:property name="imu_com_y" value="-0.0017303" />
+  <xacro:property name="imu_com_z" value="-0.00073244" />
+  <xacro:property name="imu_ixx" value="1.1862E-08" />
+  <xacro:property name="imu_ixy" value="1.3728E-14" />
+  <xacro:property name="imu_ixz" value="1.2576E-13" />
+  <xacro:property name="imu_iyy" value="4.4714E-08" />
+  <xacro:property name="imu_iyz" value="7.9871E-13" />
+  <xacro:property name="imu_izz" value="3.3118E-08" />
+  
+  <!-- Lidar properties -->
+  <xacro:property name="lidar_mass" value="0.0094944" />
+  <xacro:property name="lidar_x" value="0.200500000002106" />
+  <xacro:property name="lidar_y" value="0" />
+  <xacro:property name="lidar_z" value="0.18466154484571" />
+  <xacro:property name="lidar_yaw" value="-0.0478770767270203" />
+  <xacro:property name="lidar_com_x" value="-6.7849E-06" />
+  <xacro:property name="lidar_com_y" value="-0.0040159" />
+  <xacro:property name="lidar_com_z" value="-0.00020001" />
+  <xacro:property name="lidar_ixx" value="3.8141E-06" />
+  <xacro:property name="lidar_ixy" value="-4.9853E-11" />
+  <xacro:property name="lidar_ixz" value="7.157E-11" />
+  <xacro:property name="lidar_iyy" value="4.9345E-06" />
+  <xacro:property name="lidar_iyz" value="-8.0756E-10" />
+  <xacro:property name="lidar_izz" value="3.8153E-06" />
+
+</robot> 

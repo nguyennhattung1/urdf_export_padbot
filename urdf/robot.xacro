@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+  
+  <!-- Include files -->
+  <xacro:include filename="$(find robot_description)/urdf/properties.xacro" />
+  <xacro:include filename="$(find robot_description)/urdf/materials.xacro" />
+  <xacro:include filename="$(find robot_description)/urdf/macros.xacro" />
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="${base_link_com_x} ${base_link_com_y} ${base_link_com_z}" rpy="0 0 0" />
+      <mass value="${base_link_mass}" />
+      <inertia
+        ixx="${base_link_ixx}" ixy="${base_link_ixy}" ixz="${base_link_ixz}"
+        iyy="${base_link_iyy}" iyz="${base_link_iyz}" izz="${base_link_izz}" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot_description/meshes/base_link.STL" />
+      </geometry>
+      <material name="base_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Right Wheel -->
+  <xacro:wheel_link name="Right_wheel" mass="${right_wheel_mass}" com_x="${right_wheel_com_x}" com_y="${right_wheel_com_y}" com_z="${right_wheel_com_z}" 
+                    ixx="${right_wheel_ixx}" ixy="${right_wheel_ixy}" ixz="${right_wheel_ixz}" 
+                    iyy="${right_wheel_iyy}" iyz="${right_wheel_iyz}" izz="${right_wheel_izz}"
+                    mesh_filename="package://robot_description/meshes/Right_wheel_link.STL" />
+  
+  <xacro:wheel_joint name="Right_wheel" parent="base_link" x="0" y="-${wheel_y_offset}" z="${wheel_z_offset}" axis="0 -1 0" />
+
+  <!-- Left Wheel -->
+  <xacro:wheel_link name="Left_wheel" mass="${left_wheel_mass}" com_x="${left_wheel_com_x}" com_y="${left_wheel_com_y}" com_z="${left_wheel_com_z}" 
+                    ixx="${left_wheel_ixx}" ixy="${left_wheel_ixy}" ixz="${left_wheel_ixz}" 
+                    iyy="${left_wheel_iyy}" iyz="${left_wheel_iyz}" izz="${left_wheel_izz}"
+                    mesh_filename="package://robot_description/meshes/Left_wheel_link.STL" />
+  
+  <xacro:wheel_joint name="Left_wheel" parent="base_link" x="0" y="${wheel_y_offset}" z="${wheel_z_offset}" axis="0 1 0" />
+
+  <!-- Back MDW Frame -->
+  <xacro:mecanum_wheel_frame name="Back_MDW_frame" mass="${back_mdw_frame_mass}" 
+                           com_x="${back_mdw_frame_com_x}" com_y="${back_mdw_frame_com_y}" com_z="${back_mdw_frame_com_z}"
+                           ixx="${back_mdw_frame_ixx}" ixy="${back_mdw_frame_ixy}" ixz="${back_mdw_frame_ixz}"
+                           iyy="${back_mdw_frame_iyy}" iyz="${back_mdw_frame_iyz}" izz="${back_mdw_frame_izz}"
+                           mesh_filename="package://robot_description/meshes/Back_MDW_frame_link.STL" />
+
+  <xacro:mecanum_frame_joint name="Back_MDW_frame" parent="base_link" x="-${mdw_x_offset}" y="0" z="${mdw_z_offset}" />
+
+  <!-- Back MDW Wheel -->
+  <xacro:mecanum_wheel name="Back_MDW_wheel" mass="${back_mdw_wheel_mass}"
+                      ixx="${back_mdw_wheel_ixx}" ixy="${back_mdw_wheel_ixy}" ixz="${back_mdw_wheel_ixz}"
+                      iyy="${back_mdw_wheel_iyy}" iyz="${back_mdw_wheel_iyz}" izz="${back_mdw_wheel_izz}"
+                      mesh_filename="package://robot_description/meshes/Back_MDW_wheel_link.STL" />
+
+  <xacro:mecanum_wheel_joint name="Back_MDW_wheel" parent="Back_MDW_frame_link" 
+                           x="${back_mdw_wheel_x}" y="${back_mdw_wheel_y}" z="${back_mdw_wheel_z}"
+                           axis_x="${back_mdw_wheel_axis_x}" axis_y="0" axis_z="${back_mdw_wheel_axis_z}" />
+
+  <!-- Front MDW Frame -->
+  <xacro:mecanum_wheel_frame name="Front_MDW_frame" mass="${front_mdw_frame_mass}" 
+                           com_x="${front_mdw_frame_com_x}" com_y="${front_mdw_frame_com_y}" com_z="${front_mdw_frame_com_z}"
+                           ixx="${front_mdw_frame_ixx}" ixy="${front_mdw_frame_ixy}" ixz="${front_mdw_frame_ixz}"
+                           iyy="${front_mdw_frame_iyy}" iyz="${front_mdw_frame_iyz}" izz="${front_mdw_frame_izz}"
+                           mesh_filename="package://robot_description/meshes/Front_MDW_frame_link.STL" />
+
+  <xacro:mecanum_frame_joint name="Front_MDW_frame" parent="base_link" x="${mdw_x_offset}" y="0" z="${mdw_z_offset}" />
+
+  <!-- Front MDW Wheel -->
+  <xacro:mecanum_wheel name="Front_MDW_wheel" mass="${front_mdw_wheel_mass}"
+                      ixx="${front_mdw_wheel_ixx}" ixy="${front_mdw_wheel_ixy}" ixz="${front_mdw_wheel_ixz}"
+                      iyy="${front_mdw_wheel_iyy}" iyz="${front_mdw_wheel_iyz}" izz="${front_mdw_wheel_izz}"
+                      mesh_filename="package://robot_description/meshes/Front_MDW_wheel_link.STL" />
+
+  <xacro:mecanum_wheel_joint name="Front_MDW_wheel" parent="Front_MDW_frame_link" 
+                           x="${front_mdw_wheel_x}" y="${front_mdw_wheel_y}" z="${front_mdw_wheel_z}"
+                           axis_x="${front_mdw_wheel_axis_x}" axis_y="0" axis_z="${front_mdw_wheel_axis_z}" />
+
+  <!-- IMU Link -->
+  <xacro:sensor_link name="IMU" mass="${imu_mass}"
+                    com_x="${imu_com_x}" com_y="${imu_com_y}" com_z="${imu_com_z}"
+                    ixx="${imu_ixx}" ixy="${imu_ixy}" ixz="${imu_ixz}"
+                    iyy="${imu_iyy}" iyz="${imu_iyz}" izz="${imu_izz}"
+                    color="0.79216 0.81961 0.93333"
+                    mesh_filename="package://robot_description/meshes/IMU_link.STL" />
+
+  <xacro:fixed_joint name="IMU" parent="base_link" 
+                    x="${imu_x}" y="${imu_y}" z="${imu_z}" 
+                    roll="${pi/2}" pitch="0" yaw="${imu_yaw}" />
+
+  <!-- Lidar Link -->
+  <xacro:sensor_link name="Lidar" mass="${lidar_mass}"
+                    com_x="${lidar_com_x}" com_y="${lidar_com_y}" com_z="${lidar_com_z}"
+                    ixx="${lidar_ixx}" ixy="${lidar_ixy}" ixz="${lidar_ixz}"
+                    iyy="${lidar_iyy}" iyz="${lidar_iyz}" izz="${lidar_izz}"
+                    color="0.082353 0.082353 0.082353"
+                    mesh_filename="package://robot_description/meshes/Lidar_link.STL" />
+
+  <xacro:continuous_joint name="Lidar" parent="base_link" 
+                         x="${lidar_x}" y="${lidar_y}" z="${lidar_z}" 
+                         roll="${pi/2}" pitch="0" yaw="${lidar_yaw}" 
+                         axis="0 1 0" />
+
+</robot> 

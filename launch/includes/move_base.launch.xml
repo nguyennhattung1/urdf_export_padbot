@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="no_static_map" default="false"/>
+  
+  <arg name="base_global_planner" default="navfn/NavfnROS"/>
+  <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/>
+  
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_global_planner" value="$(arg base_global_planner)"/>
+    <param name="base_local_planner" value="$(arg base_local_planner)"/>  
+    <rosparam file="$(find robot_description)/param/planner.yaml" command="load"/>
+
+    <!-- Costmap parameters -->
+    <rosparam file="$(find robot_description)/param/costmap_common.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find robot_description)/param/costmap_common.yaml" command="load" ns="local_costmap" />
+    
+    <!-- Local costmap -->
+    <rosparam file="$(find robot_description)/param/costmap_local.yaml" command="load" ns="local_costmap" />
+    <param name="local_costmap/width" value="4.0"/>
+    <param name="local_costmap/height" value="4.0"/>
+    
+    <!-- Global costmap -->
+    <rosparam file="$(find robot_description)/param/costmap_global.yaml" command="load" ns="global_costmap" />
+
+    <!-- Static layer only if we have a map -->
+    <rosparam file="$(find robot_description)/param/costmap_global_static.yaml" command="load" ns="global_costmap" unless="$(arg no_static_map)"/>
+    
+    <!-- Set the transform tolerance -->
+    <param name="global_costmap/transform_tolerance" value="1.0" />
+    <param name="local_costmap/transform_tolerance" value="1.0" />
+
+    <!-- Map management -->
+    <param name="recovery_behavior_enabled" value="true" />
+    <param name="clearing_rotation_allowed" value="true" />
+    <param name="planner_frequency" value="0.0" />
+    <param name="planner_patience" value="5.0" />
+    
+    <!-- Velocity restrictions -->
+    <param name="max_vel_x" value="0.5" />
+    <param name="min_vel_x" value="0.1" />
+    <param name="max_vel_theta" value="1.0" />
+    <param name="min_vel_theta" value="-1.0" />
+    <param name="min_in_place_vel_theta" value="0.4" />
+    <param name="holonomic_robot" value="false" />
+    <param name="escape_vel" value="-0.1" />
+    
+    <!-- Tolerance parameters -->
+    <param name="yaw_goal_tolerance" value="0.05" />
+    <param name="xy_goal_tolerance" value="0.10" />
+    <param name="latch_xy_goal_tolerance" value="false" />
+  </node>
+</launch> 

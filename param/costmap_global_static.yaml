@@ -1,0 +1,5 @@
+# Static map layer configuration for global costmap
+
+static_layer:
+  map_topic: /map
+  subscribe_to_updates: true

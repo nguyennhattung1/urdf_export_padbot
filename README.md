@@ -112,87 +112,151 @@ ros2 launch nav2_map_server map_saver_cli.launch.py save_map:=true map:=<map_nam
 - Check that the map frame and odom frame are properly defined
 - Make sure your navigation parameters match your robot's physical capabilities
 
-# Robot Navigation Stack
+# Robot Navigation Stack - ROS 2 Humble
 
-This repository contains an optimized ROS 2 navigation package for robots with URDF models exported from SolidWorks. The code has been optimized to remove unnecessary components while maintaining full functionality.
+Gói phần mềm này chứa đầy đủ các thành phần để điều khiển và điều hướng tự động cho robot, được chuyển đổi hoàn toàn từ ROS 1 sang ROS 2 Humble. Dự án bao gồm mô hình URDF từ SolidWorks, điều khiển differential drive, và hệ thống điều hướng Nav2.
 
-## Optimizations Made
+## Chuyển đổi sang ROS 2
 
-The codebase has been optimized in several ways:
+Tất cả các thành phần đã được chuyển đổi sang ROS 2:
 
-1. **Removed Unnecessary Launch Files**:
+1. **Launch Files**:
 
-   - Eliminated redundant simulation-specific launch files
-   - Removed unused SLAM configuration files
-   - Simplified launch structure to focus on essential components
+   - Từ định dạng XML (ROS 1) sang định dạng Python (ROS 2)
+   - Thay thế tất cả các node ROS 1 bằng các node tương đương trong ROS 2
 
-2. **Streamlined Nav2 Parameters**:
+2. **Điều hướng**:
 
-   - Reduced parameters to only essential configurations
-   - Removed redundant node configurations (e.g., `*_rclcpp_node` entries)
-   - Optimized controller configurations for better performance
-   - Eliminated duplicate and unused parameter sections
+   - Thay thế move_base (ROS 1) bằng Nav2 (ROS 2)
+   - Chuyển đổi AMCL để sử dụng tham số Nav2
+   - Cập nhật global & local planners cho API của ROS 2
 
-3. **Package Dependency Cleanup**:
+3. **Các Node Python**:
+   - Cập nhật differential drive controller để sử dụng API node của ROS 2
+   - Chuyển đổi TF sang TF2
+   - Cập nhật cách publish các message theo mô hình ROS 2 với QoS
 
-   - Removed unnecessary dependencies to make the package lighter
-   - Focused only on required navigation components
+## Cấu trúc gói
 
-4. **Launch File Optimization**:
-   - Removed unused imports in launch files
-   - Simplified parameter passing between launch files
-   - Improved readability and maintainability
+- **launch/** - Chứa các file launch cho ROS 2
 
-## Package Structure
+  - **robot_state_publisher.launch.py** - Khởi chạy robot state publisher
+  - **navigation.launch.py** - Khởi chạy Nav2 stack
+  - **main.launch.py** - File launch chính
+  - **display.launch.py** - Launch chỉ để hiển thị
+  - **gazebo.launch.py** - Launch mô phỏng Gazebo
+  - **controller.launch.py** - Launch điều khiển differential drive
+  - **includes/** - Các module launch phụ trợ
+    - **amcl.launch.py** - Định vị
+    - **nav2.launch.py** - Điều hướng
 
-- **launch/** - Contains optimized launch files for running the robot navigation stack
+- **urdf_export_assem_3_sldasm/** - Gói Python
 
-  - **robot_state_publisher.launch.py** - Launches the robot state publisher with URDF model
-  - **navigation.launch.py** - Launches the Navigation2 stack
-  - **main.launch.py** - Main launch file that starts both robot state publisher and navigation
+  - **differential_drive_controller.py** - Node điều khiển ROS 2
 
-- **params/** - Contains optimized configuration parameters
+- **params/** - Chứa các tham số cấu hình
 
-  - **nav2_params.yaml** - Streamlined Navigation2 configuration parameters
+  - **nav2_params.yaml** - Tham số cấu hình Nav2
 
-- **urdf/** - Contains the robot URDF model
+- **urdf/** - Chứa mô hình URDF của robot
 
-  - **robot.urdf** - Robot URDF model exported from SolidWorks
+  - **robot.urdf** - Mô hình URDF robot từ SolidWorks
+  - **robot.xacro** - Mô hình XACRO robot
+  - **properties.xacro** - Tham số robot
+  - **materials.xacro** - Định nghĩa vật liệu
+  - **macros.xacro** - Định nghĩa link và joint tái sử dụng
 
-- **maps/** - Contains navigation maps
-  - **map.yaml** - Map configuration
-  - **map.pgm** - Map image file
+- **maps/** - Chứa bản đồ cho điều hướng
+  - **map.yaml** - Cấu hình bản đồ
+  - **map.pgm** - File hình ảnh bản đồ
 
-## Running the Navigation Stack
+## Cài đặt
 
-To start the navigation stack:
+```bash
+# Tạo workspace ROS 2
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+
+# Clone repository
+git clone <đường_dẫn_repository> urdf_export_assem_3_sldasm
+
+# Cài đặt dependencies
+cd ~/ros2_ws
+rosdep install --from-paths src --ignore-src -r -y
+
+# Build package
+colcon build --symlink-install
+source install/setup.bash
+```
+
+## Sử dụng
+
+### Khởi động hệ thống điều hướng
 
 ```bash
 ros2 launch urdf_export_assem_3_sldasm main.launch.py
 ```
 
-## Launch Arguments
-
-The launch files accept several arguments:
-
-- `use_sim_time`: Set to 'true' to use simulation time (default: true)
-- `map`: Path to the map YAML file (default: maps/map.yaml)
-- `params_file`: Path to the navigation parameters file (default: params/nav2_params.yaml)
-- `autostart`: Set to 'true' to automatically start the navigation stack (default: true)
-
-Example with custom arguments:
+### Chỉ hiển thị robot trong RViz2
 
 ```bash
-ros2 launch urdf_export_assem_3_sldasm main.launch.py use_sim_time:=false map:=/path/to/custom/map.yaml
+ros2 launch urdf_export_assem_3_sldasm display.launch.py
 ```
 
-## Customization
+### Mô phỏng trong Gazebo với điều hướng
 
-To use your own URDF model:
+```bash
+ros2 launch urdf_export_assem_3_sldasm ros1_navigation.launch.py
+```
 
-1. Replace the `robot.urdf` file in the `urdf` directory with your model
-2. Update the parameters in `nav2_params.yaml` to match your robot's configuration
+## Tham số Launch
+
+Các file launch chấp nhận các tham số sau:
+
+- `use_sim_time`: Sử dụng thời gian mô phỏng (mặc định: true)
+- `map`: Đường dẫn đến file bản đồ YAML (mặc định: maps/map.yaml)
+- `params_file`: Đường dẫn đến file tham số điều hướng
+- `autostart`: Tự động khởi động stack điều hướng
+
+## Tùy chỉnh
+
+### Sử dụng mô hình URDF riêng
+
+1. Thay thế file `robot.urdf` trong thư mục `urdf/`
+2. Cập nhật các tham số trong `params/nav2_params.yaml` để phù hợp với robot của bạn
+
+### Điều chỉnh tham số điều hướng
+
+Các tham số điều hướng trong `params/nav2_params.yaml` có thể được điều chỉnh:
+
+- `controller_server`: Tham số cho điều khiển di chuyển
+- `planner_server`: Tham số cho lập kế hoạch đường đi
+- `amcl`: Tham số cho định vị
+- `local_costmap` và `global_costmap`: Tham số cho tránh chướng ngại vật
+
+## Tạo bản đồ mới
+
+Nếu bạn cần tạo bản đồ mới, sử dụng:
+
+```bash
+ros2 launch nav2_map_server map_saver_cli.launch.py save_map:=true map:=<tên_bản_đồ>
+```
+
+## Dependencies
+
+- ROS 2 Humble
+- Nav2
+- Gazebo 11 với plugin ROS 2
+- RViz2
+- Python 3.8+
+
+## Xử lý sự cố
+
+- Đảm bảo cây biến đổi của robot được thiết lập đúng (base_link, base_footprint, v.v.)
+- Kiểm tra dữ liệu laser scan được xuất bản trên topic đúng
+- Kiểm tra frame map và odom được định nghĩa đúng
+- Đảm bảo các tham số điều hướng phù hợp với robot của bạn
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Dự án này được cấp phép theo giấy phép MIT - xem file LICENSE để biết chi tiết.
